@@ -1,1 +1,7 @@
-
+pandas
+numpy
+torch
+matplotlib
+typing_extensions
+pyinstaller
+openpyxl
