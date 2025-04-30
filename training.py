@@ -2,7 +2,8 @@ import torch
 from torch.utils.data import DataLoader, TensorDataset
 import torch.optim as optim
 import os
-
+import time
+import datetime
 
 from help_func import self_feeding, enc_self_feeding, set_requires_grad, get_model_path, enc_self_feeding_uf, load_model
 from loss_func import total_loss, total_loss_forced, total_loss_unforced
@@ -52,6 +53,8 @@ def trainingfcn(eps, check_epoch, lr, batch_size, S_p, T, dt, integrated_pairs, 
 
       running_loss_list, L4_list, L6_list = [torch.zeros(eps) for _ in range(3)]
 
+      start_time = time.perf_counter()
+
       for e in range(eps):
           model.train()
           running_loss, running_L4, running_L6 = [0.0] * 3
@@ -75,6 +78,16 @@ def trainingfcn(eps, check_epoch, lr, batch_size, S_p, T, dt, integrated_pairs, 
 
           # Every x epochs, evaluate on the test set and checkpoint if improved.
           if (e + 1) % check_epoch == 0:
+              now         = time.perf_counter()
+              elapsed_sec = now - start_time
+              avg_epoch   = elapsed_sec / (e + 1)
+              rem_epochs  = eps - (e + 1)
+              eta_sec     = avg_epoch * rem_epochs
+
+              elapsed_str = str(datetime.timedelta(seconds=int(elapsed_sec)))
+              eta_str     = str(datetime.timedelta(seconds=int(eta_sec)))
+
+              print(f"Epoch {e+1}/{eps}, "f"Train Loss: {running_loss:.3e}, "f"Elapsed: {elapsed_str}, ETA: {eta_str}")
               model.eval()
               test_running_loss = 0.0
               for (batch_x,) in test_loader:
