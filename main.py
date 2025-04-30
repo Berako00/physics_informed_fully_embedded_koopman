@@ -26,7 +26,7 @@ start_time = time.time()
 
 Setup = 'Twolink'# Simple, Twolink
 
-numICs = 30000
+numICs = 300
 T_step = 50
 dt = 0.02
 
