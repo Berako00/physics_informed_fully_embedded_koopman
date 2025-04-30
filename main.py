@@ -73,13 +73,15 @@ print(f"Test tensor shape: {test_tensor.shape}")
 print(f"Validation tensor shape: {val_tensor.shape}")
 
 
-# Instantiate the model and move it to the GPU (if available)
-model = AUTOENCODER(Num_meas, Num_inputs, Num_x_Obsv, Num_x_Neurons, Num_u_Obsv, Num_u_Neurons, Num_hidden_x_encoder, Num_hidden_u_encoder)
+integrated_states = [2, 3] # The state on index 2 is being integrated for the state 0, and the state on index 3 is the derivative of the state on index 1
 
+model = AUTOENCODER(Num_meas, Num_inputs, Num_x_Obsv, Num_x_Neurons, 
+                 Num_u_Obsv, Num_u_Neurons, Num_hidden_x_encoder, 
+                 Num_hidden_u_encoder, dt, integrated_states)
 # Training Loop
 start_training_time = time.time()
 
-eps = 5000       # Number of epochs per batch size
+eps = 4       # Number of epochs per batch size
 lr = 1e-3        # Learning rate
 batch_size = 256
 S_p = 30
@@ -87,10 +89,10 @@ T = 50
 alpha = [0.001, 1e-5, 1e-12]
 W = 0
 M = 1 # Amount of models you want to run
-check_epoch = 10
+check_epoch = 2
 
 [Lowest_loss, Models_loss_list, Best_Model, Lowest_loss_index, 
- Running_Losses_Array, L4_Array, L6_Array] = trainingfcn(eps, check_epoch, lr, batch_size, S_p, T, dt, alpha, Num_meas, Num_inputs, Num_x_Obsv, Num_x_Neurons, Num_u_Obsv,
+ Running_Losses_Array, L4_Array, L6_Array] = trainingfcn(eps, check_epoch, lr, batch_size, S_p, T, dt, integrated_states, alpha, Num_meas, Num_inputs, Num_x_Obsv, Num_x_Neurons, Num_u_Obsv,
                 Num_u_Neurons, Num_hidden_x_encoder, Num_hidden_u_encoder, train_tensor, test_tensor, M, device)
 
 ind_loss = int(Lowest_loss_index)
