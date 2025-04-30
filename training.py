@@ -9,7 +9,7 @@ from loss_func import total_loss, total_loss_forced, total_loss_unforced
 from nn_structure import AUTOENCODER
 
 
-def trainingfcn(eps, check_epoch, lr, batch_size, S_p, T, dt, alpha, Num_meas, Num_inputs, Num_x_Obsv, Num_x_Neurons, Num_u_Obsv,
+def trainingfcn(eps, check_epoch, lr, batch_size, S_p, T, dt, integrated_pairs, alpha, Num_meas, Num_inputs, Num_x_Obsv, Num_x_Neurons, Num_u_Obsv,
                 Num_u_Neurons, Num_hidden_x_encoder, Num_hidden_u_encoder, train_tensor, test_tensor, M, device=None):
 
   if device is None:
@@ -42,10 +42,9 @@ def trainingfcn(eps, check_epoch, lr, batch_size, S_p, T, dt, alpha, Num_meas, N
 
   for c_m in range(M):
       model_path_i = Model_path[c_m]
-      model = AUTOENCODER(Num_meas, Num_inputs, Num_x_Obsv,
-                          Num_x_Neurons, Num_u_Obsv, Num_u_Neurons,
-                          Num_hidden_x_encoder,
-                          Num_hidden_u_encoder).to(device)
+      model = AUTOENCODER(Num_meas, Num_inputs, Num_x_Obsv, Num_x_Neurons, 
+                 Num_u_Obsv, Num_u_Neurons, Num_hidden_x_encoder, 
+                 Num_hidden_u_encoder, dt, integrated_pairs).to(device)
 
       optimizer = optim.Adam(model.parameters(), lr=lr)
 
