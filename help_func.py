@@ -11,7 +11,7 @@ def get_model_path(i):
     linux_dir2   = "/home/trarity/state_koopman_operator"
     colab_dir1  = "/content/drive/My Drive/Colab Notebooks"
     colab_dir2  = "/content/drive/MyDrive/Colab Notebooks"  
-    ucloud = "/work/state_koopman_operator"
+    ucloud = "/work/physics_informed_state_input_koopman"
     
     path1 = os.path.join(linux_dir2, f"Autoencoder_model_params{i}.pth")
     path2 = os.path.join(windows_dir1, f"Autoencoder_model_params{i}.pth")
