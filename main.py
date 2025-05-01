@@ -74,10 +74,11 @@ print(f"Validation tensor shape: {val_tensor.shape}")
 
 
 integrated_states = [2, 3] # The state on index 2 is being integrated for the state 0, and the state on index 3 is the derivative of the state on index 1
+Num_state_notU_affected = 2
 
-model = AUTOENCODER(Num_meas, Num_inputs, Num_x_Obsv, Num_x_Neurons, 
-                 Num_u_Obsv, Num_u_Neurons, Num_hidden_x_encoder, 
-                 Num_hidden_u_encoder, dt, integrated_states)
+model = AUTOENCODER(Num_meas, Num_inputs, Num_x_Obsv, Num_x_Neurons,
+                 Num_u_Obsv, Num_u_Neurons, Num_hidden_x_encoder,
+                 Num_hidden_u_encoder, dt, integrated_states, Num_state_notU_affected)
 # Training Loop
 start_training_time = time.time()
 
