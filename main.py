@@ -93,7 +93,7 @@ M = 1 # Amount of models you want to run
 check_epoch = 2
 
 [Lowest_loss, Models_loss_list, Best_Model, Lowest_loss_index, 
- Running_Losses_Array, L4_Array, L6_Array] = trainingfcn(eps, check_epoch, lr, batch_size, S_p, T, dt, integrated_states, alpha, Num_meas, Num_inputs, Num_x_Obsv, Num_x_Neurons, Num_u_Obsv,
+ Running_Losses_Array, L4_Array, L6_Array] = trainingfcn(eps, check_epoch, lr, batch_size, S_p, T, dt, integrated_states, Num_state_notU_affected, alpha, Num_meas, Num_inputs, Num_x_Obsv, Num_x_Neurons, Num_u_Obsv,
                 Num_u_Neurons, Num_hidden_x_encoder, Num_hidden_u_encoder, train_tensor, test_tensor, M, device)
 
 ind_loss = int(Lowest_loss_index)
