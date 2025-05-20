@@ -17,6 +17,7 @@ from nn_structure import AUTOENCODER
 from training import trainingfcn
 from data_generation import DataGenerator, TwoLinkRobotDataGenerator
 
+from plotting import plot_results, plot_debug, plot_losses
 from ga_optimizer import run_genetic_algorithm
 import multiprocessing as mp
 
@@ -41,6 +42,10 @@ def main():
     
     # ---- GA Params -------------
     use_ga = True
+    if use_ga and device=="cpu":
+        use_ga = False
+        print("No GPU available, Genetic algorithm skipped")
+        
     generations = 2
     pop_size = 5
     eps = 5
@@ -140,6 +145,28 @@ def main():
         with open("best_params.txt", "w") as f:
             json.dump(best_params, f, indent=4)
         print("Saved GA best parameters to best_params.txt")
+        
+    # Instantiate the model and move it to the GPU (if available)
+    model = AUTOENCODER(Num_meas, Num_inputs, Num_x_Obsv, Num_x_Neurons, Num_u_Obsv, Num_u_Neurons, Num_hidden_x_encoder, Num_hidden_u_encoder)
 
+    # Training Loop Parameters
+    start_training_time = time.time()
+    
+    [Lowest_loss, Models_loss_list, Best_Model, Lowest_loss_index, Running_Losses_Array, L4_Array, L6_Array] = trainingfcn(eps, check_epoch, lr, batch_size, S_p, T, dt, alpha, Num_meas, Num_inputs, Num_x_Obsv, Num_x_Neurons, Num_u_Obsv, Num_u_Neurons, Num_hidden_x_encoder, Num_hidden_u_encoder, train_tensor, test_tensor, M, device)
+    
+    # Load the parameters of the best model
+    load_model(model, Best_Model, device)
+    print(f"Loaded model parameters from Model: {Best_Model}")
+    
+    end_time = time.time()
+    total_time = end_time - start_time
+    total_training_time = end_time - start_training_time
+    
+    print(f"Total time is: {total_time}")
+    print(f"Total training time is: {total_training_time}")
+    
+    # ----- Result Plotting and Further Analysis -----
+    plot_results(model, val_tensor, train_tensor, S_p, Num_meas, Num_x_Obsv, T)
+    
 if __name__ == "__main__":
     main()
