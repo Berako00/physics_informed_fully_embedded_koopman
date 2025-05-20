@@ -3,6 +3,7 @@ import copy
 import torch
 from training import trainingfcn_ga, trainingfcn_mixed
 import concurrent.futures
+import json
 from multiprocessing import get_context
 
 def evaluate_candidate(check_epoch, candidate, train_tensor, test_tensor, eps, lr, batch_size, S_p, T, dt, M, device):
@@ -184,6 +185,16 @@ def run_genetic_algorithm(check_epoch, Num_meas, Num_inputs, train_tensor, test_
 
         population = new_population
         print(f"Best candidate in generation {gen+1}: {best_candidate} (Loss: {-best_fitness})")
+
+        # Add loss to the candidate dictionary
+        best_candidate_with_loss = best_candidate.copy()
+        best_candidate_with_loss['loss'] = -best_fitness
+        
+        # Save to file
+        with open(f"best_params_{gen+1}.txt", "w") as f:
+            json.dump(best_candidate_with_loss, f, indent=4)
+        
+        print(f"Saved GA best parameters to best_params_{gen+1}.txt")
 
     print("Best candidate overall:", best_candidate)
     return best_candidate
